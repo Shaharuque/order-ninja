@@ -17,7 +17,10 @@ export async function productSearch(req:Request,res : Response){
         const {q,cat} = req.query;
         const result =await searchProducts(cat,q);
 
-        res.json(result);
+        res.status(200).json({
+            status:true,
+            data:result
+        });
     } catch (error) {
         return [];
     }

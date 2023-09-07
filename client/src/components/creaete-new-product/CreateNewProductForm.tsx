@@ -16,6 +16,7 @@ import type { RcFile, UploadProps } from "antd/es/upload/interface";
 import axios from "axios";
 import CustomInstance from "../../lib/axios";
 import useAuth from "../../hooks/useAuth";
+import { postProduct } from "../../services/Supply/supplyService";
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
 interface MyFormItemGroupProps {
@@ -143,10 +144,14 @@ function CreateNewProductForm({ updater, setOpen }) {
                 ...value,
                 images: imgUrls,
             };
-            const axr = await CustomInstance.post(
-                `/product/${rawJson.store_id}`,
-                newProduct
-            );
+            // const axr = await CustomInstance.post(
+            //     `/product/${rawJson.store_id}`,
+            //     newProduct
+            // );
+
+            //Service call
+            postProduct(newProduct,rawJson);
+
             updater();
             setOpen(false);
             productForm.resetFields([

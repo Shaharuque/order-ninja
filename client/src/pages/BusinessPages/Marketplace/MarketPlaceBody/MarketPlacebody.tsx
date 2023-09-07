@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { getALlProducts } from "../../../../services/Business/allProducts";
 import SingleProductCard from "../SingleProductCard/SingleProductCard";
 import CustomInstance from "../../../../lib/axios";
+import { getAllSearchedProducts } from "../../../../services/Business/businessServices";
 
 
 interface IMarketPlaceBody {
@@ -12,16 +13,23 @@ interface IMarketPlaceBody {
 function MarketPlacebody({ query  , category }  : any) {
     const [productList, setProductList] = useState([]);
 
+    // useEffect(() => {
+    //     const pd = async () => {
+    //         // const result = await getALlProducts();
+    //         const {data} = await CustomInstance.get(`/public/search?q=${query}&cat=${category}`);
+    //         console.log(`query  :${query}   category : ${category}`)
+    //         // console.log('✨✨🎇🎆',re);
+    //         // console.log(result);
+    //         setProductList(data);
+    //     };
+    //     pd();
+    // }, [query, category, productList.length]);
+
+    //3. get all the searched products
     useEffect(() => {
-        const pd = async () => {
-            // const result = await getALlProducts();
-            const {data} = await CustomInstance.get(`/public/search?q=${query}&cat=${category}`);
-            console.log(`query  :${query}   category : ${category}`)
-            // console.log('✨✨🎇🎆',re);
-            // console.log(result);
-            setProductList(data);
-        };
-        pd();
+        getAllSearchedProducts(query,category).then((res)=>{
+            setProductList(res);
+        });
     }, [query, category, productList.length]);
 
     return (

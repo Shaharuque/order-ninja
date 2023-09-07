@@ -1,24 +1,32 @@
 import React, { useRef, useEffect, useState } from "react";
 import style from "./MarketProduct.module.css";
 import CustomInstance from "../../../../lib/axios";
+import { getAllCategory } from "../../../../services/Business/businessServices";
 
 function MarketProductCategory({onCatChange ,selected} : any) {
     const containerRef = useRef<HTMLDivElement>(null);
     const [catList, setCatList] = useState([]);
 
-    useEffect(() => {
-        try {
-            const apiCall = async () => {
-                const res = await CustomInstance.get("/category");
-                setCatList(res.data);
-            };
+    // useEffect(() => {
+    //     try {
+    //         const apiCall = async () => {
+    //             const res = await CustomInstance.get("/category");
+    //             setCatList(res.data);
+    //         };
             
-            apiCall();
-            console.log(`🎗🎁🎁🎁🎀🧧`,selected);
-            // console.log(tst);
-        } catch (error) {
-            console.log(error);
-        }
+    //         apiCall();
+    //         console.log(`🎗🎁🎁🎁🎀🧧`,selected);
+    //         // console.log(tst);
+    //     } catch (error) {
+    //         console.log(error);
+    //     }
+    // }, [catList.length,selected]);
+
+    // 2.get all the category
+    useEffect(() => {
+        getAllCategory().then((res)=>{
+            setCatList(res);;
+        });
     }, [catList.length,selected]);
 
     const handleWheelScroll = (e: React.WheelEvent) => {

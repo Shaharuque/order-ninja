@@ -34,6 +34,7 @@ import SellerLayout from "../../layout/Seller/SellerLayout";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import CustomInstance from "../../lib/axios";
+import { productView } from "../../services/Supply/supplyService";
 
 const { Title, Text } = Typography;
 
@@ -53,11 +54,12 @@ const SellerProductView: React.FC = () => {
     const [data, setData] = useState(null);
 
     console.log(location.state);
-    useEffect(() => {
-        CustomInstance.get(`/product/single/${state.pid}`).then((res) => {
-            console.log(`view product data : `, res.data);
 
-            setData(res.data);
+    // Service
+    useEffect(() => {
+        productView(state?.pid).then((res) => {
+            console.log(`view product data : `, res);
+            setData(res);
         });
     }, [state.pid]);
     return data ? (
