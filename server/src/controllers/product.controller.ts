@@ -37,7 +37,9 @@ export async function addNewProduct(req : Request, res : Response){
             sold:0,
             description : req.body.description,
             images : req.body.images,
-            reviews : [] 
+            reviews : [] ,
+            expiry_date : req.body.expiry_date,
+            discount : req.body.discount,
         };
         const rs = await createSingleProduct(newRawProduct);
         return res.send("nice");

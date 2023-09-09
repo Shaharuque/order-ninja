@@ -8,6 +8,7 @@ import {
     Col,
     Select,
     InputNumber,
+    DatePicker,
 } from "antd";
 
 import { FormItemProps, UploadFile, message } from "antd";
@@ -69,6 +70,8 @@ function CreateNewProductForm({ updater, setOpen }) {
 
     const [catList, setCatList] = useState([]);
 
+    const [expiryDate,setExpiryDate]=useState('')
+
     const raw: string = localStorage.getItem("raw_user")!;
     const rawJson = JSON.parse(raw);
     // console.log(JSON.parse(raw));
@@ -110,6 +113,12 @@ function CreateNewProductForm({ updater, setOpen }) {
         fileList,
     };
 
+    //Date handler
+    const onChange: DatePickerProps['onChange'] = (date, dateString) => {
+        console.log(dateString);
+        setExpiryDate(dateString)
+      };
+
     useEffect(() => {
         try {
             const apiCall = async () => {
@@ -127,6 +136,7 @@ function CreateNewProductForm({ updater, setOpen }) {
 
     const onFinish = async (value: object) => {
         // console.log(urlList);
+        console.log(value)
         try {
             const imgUrls = await handleUpload();
 
@@ -142,6 +152,7 @@ function CreateNewProductForm({ updater, setOpen }) {
 
             const newProduct = {
                 ...value,
+                expiry_date:expiryDate,
                 images: imgUrls,
             };
             // const axr = await CustomInstance.post(
@@ -150,7 +161,7 @@ function CreateNewProductForm({ updater, setOpen }) {
             // );
 
             //Service call
-            postProduct(newProduct,rawJson);
+            postProduct(newProduct, rawJson);
 
             updater();
             setOpen(false);
@@ -293,8 +304,31 @@ function CreateNewProductForm({ updater, setOpen }) {
                 </Col>
             </Row>
 
+            <Row>
+                <Col span={10}>
+                    <Form.Item label="DatePicker">
+                        <DatePicker onChange={onChange}/>
+                    </Form.Item>
+                </Col>
+                <Col span={10} offset={4}>
+                    <Form.Item
+                        label="Discount"
+                        name="discount"
+                        rules={[
+                            {
+                                required: true,
+                                type: "number",
+                                message: "Please input discount amount!",
+                            },
+                        ]}
+                    >
+                        <InputNumber style={{ width: "100%" }} />
+                    </Form.Item>
+                </Col>
+            </Row>
+
             <Upload {...props}>
-                <Button type="primary" ghost  style={{ width: "230px" ,marginBottom:'16px'}} icon={<UploadOutlined />}>
+                <Button type="primary" ghost style={{ width: "230px", marginBottom: '16px' }} icon={<UploadOutlined />}>
                     Select File
                 </Button>
             </Upload>

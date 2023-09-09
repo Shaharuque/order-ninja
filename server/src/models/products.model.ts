@@ -13,7 +13,9 @@ export interface IProduct {
     images : string[],
     unit_size:string,
     weight : string,
-    reviews : []
+    reviews : [],
+    expiry_date : Date,
+    discount : number,
 }
 const productSchema = new mongoose.Schema<IProduct>({
     id : String,
@@ -33,7 +35,9 @@ const productSchema = new mongoose.Schema<IProduct>({
     images : Array,
     reviews : Array,
     unit_size:Number,
-    weight:Number
+    weight:Number,
+    expiry_date : Date,
+    discount : Number,
 
 },{
     timestamps : true
