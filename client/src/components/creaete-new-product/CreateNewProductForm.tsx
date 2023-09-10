@@ -18,6 +18,7 @@ import axios from "axios";
 import CustomInstance from "../../lib/axios";
 import useAuth from "../../hooks/useAuth";
 import { postProduct } from "../../services/Supply/supplyService";
+import { ItemDetailsGenerate } from "../../utils/helpers/productDescriptionGenerator";
 const MyFormItemContext = React.createContext<(string | number)[]>([]);
 
 interface MyFormItemGroupProps {
@@ -70,7 +71,7 @@ function CreateNewProductForm({ updater, setOpen }) {
 
     const [catList, setCatList] = useState([]);
 
-    const [expiryDate,setExpiryDate]=useState('')
+    const [expiryDate, setExpiryDate] = useState('')
 
     const raw: string = localStorage.getItem("raw_user")!;
     const rawJson = JSON.parse(raw);
@@ -117,7 +118,7 @@ function CreateNewProductForm({ updater, setOpen }) {
     const onChange: DatePickerProps['onChange'] = (date, dateString) => {
         console.log(dateString);
         setExpiryDate(dateString)
-      };
+    };
 
     useEffect(() => {
         try {
@@ -152,7 +153,7 @@ function CreateNewProductForm({ updater, setOpen }) {
 
             const newProduct = {
                 ...value,
-                expiry_date:expiryDate,
+                expiry_date: expiryDate,
                 images: imgUrls,
             };
             // const axr = await CustomInstance.post(
@@ -184,12 +185,29 @@ function CreateNewProductForm({ updater, setOpen }) {
         // console.log(ddr)
     };
 
+    const [title,setTitle]=useState('')
+    const [desc,setDesc]=useState('')
+    const [loading,setLoading]=useState(false)
+    const handleDescGenerate=async()=>{
+        if (title) {
+            setLoading(true)
+            const result = await ItemDetailsGenerate(title)
+            if (result) {
+                setDesc(result)
+                setLoading(false)
+            }
+        }
+    }
+
     return (
         <Form
             form={productForm}
             name="form_item_path"
             layout="vertical"
             onFinish={onFinish}
+            initialValues={{
+                ["description"]: desc 
+              }}
         >
             <Row>
                 <Col span={12}>
@@ -203,7 +221,7 @@ function CreateNewProductForm({ updater, setOpen }) {
                             },
                         ]}
                     >
-                        <Input placeholder="Product Name" />
+                        <Input onChange={(e)=>setTitle(e.target.value)} placeholder="Product Name" />
                     </Form.Item>
                 </Col>
                 <Col span={8} offset={2}>
@@ -235,8 +253,12 @@ function CreateNewProductForm({ updater, setOpen }) {
                     },
                 ]}
             >
-                <Input.TextArea rows={3} placeholder="Product Description" />
+                <Input.TextArea value={desc} rows={3} placeholder="Product Description" />
             </Form.Item>
+            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+                <button type="button" onClick={handleDescGenerate} style={{ padding: '5px', borderRadius: '5px' }}>Generate</button>
+                <h1 style={{ fontWeight: 'normal', fontSize: '12px' }}>Loading...</h1>
+            </div>
 
             <Row>
                 <Col span={10}>
@@ -307,7 +329,7 @@ function CreateNewProductForm({ updater, setOpen }) {
             <Row>
                 <Col span={10}>
                     <Form.Item label="DatePicker">
-                        <DatePicker onChange={onChange}/>
+                        <DatePicker onChange={onChange} />
                     </Form.Item>
                 </Col>
                 <Col span={10} offset={4}>

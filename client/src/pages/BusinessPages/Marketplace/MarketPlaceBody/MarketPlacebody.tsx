@@ -4,6 +4,7 @@ import { getALlProducts } from "../../../../services/Business/allProducts";
 import SingleProductCard from "../SingleProductCard/SingleProductCard";
 import CustomInstance from "../../../../lib/axios";
 import { getAllSearchedProducts } from "../../../../services/Business/businessServices";
+import { useGetNoDiscountedProductsQuery } from "../../../../features/products/productsApiSlice";
 
 
 interface IMarketPlaceBody {
@@ -32,6 +33,8 @@ function MarketPlacebody({ query  , category }  : any) {
         });
     }, [query, category, productList.length]);
 
+    const {data:allNonDiscounted,isLoading:nonDiscountedLoading}=useGetNoDiscountedProductsQuery({})
+
     return (
         <div style={{  marginTop: "8px" }}>
            
@@ -42,8 +45,18 @@ function MarketPlacebody({ query  , category }  : any) {
                 <span>{new Date().toLocaleTimeString()}</span>
             </div> */}
 
-            <div style={{display:'flex',gap : '16px',flexWrap:'wrap'}}>
+            <h1 style={{marginTop:'20px' ,marginBottom:'10px'}}>Top Discounted products</h1>
+            <div style={{display:'flex',gap : '16px',flexWrap:'wrap' , marginBottom:'30px'}}>
                 {productList?.map((prdc) => {
+                    // console.log(`=`.repeat(20));
+                    // console.log(prdc);
+                    return <SingleProductCard key={Math.random()} productInfo={prdc} />;
+                })}
+            </div>
+
+                <h1 style={{marginTop:'20px' ,marginBottom:'10px'}}>Popular Products</h1>
+            <div style={{display:'flex',gap : '16px',flexWrap:'wrap'}}>
+                {allNonDiscounted?.result?.map((prdc) => {
                     // console.log(`=`.repeat(20));
                     // console.log(prdc);
                     return <SingleProductCard key={Math.random()} productInfo={prdc} />;

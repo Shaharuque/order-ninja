@@ -3,7 +3,9 @@ import style from "./productcard.module.css";
 import { Card, Image, Button, Modal, Row, Col } from "antd";
 import ShoppingCartContext from "../../../../context/ShoppingCartContext";
 
+
 function SingleProductCard({ productInfo }: any) {
+    console.log('product Info : ',productInfo)
     const [count, setCount] = useState(0);
     const [showOptions, setShowOptions] = useState(false);
 
@@ -117,9 +119,20 @@ function SingleProductCard({ productInfo }: any) {
                     </div>
                 </div>
             </div>
+            
             <div className={style["productDetailsDiv"]}>
                 <p> {productInfo.name} </p>
-                <h3> ৳{productInfo.price} </h3>
+                {
+                    productInfo.discount > 0 ? (
+                        <h3 className={style["originalPrice"]}> ৳{productInfo.price} </h3>
+                    ):
+                    <h3> ৳{productInfo.price} </h3>
+                }
+                {
+                    productInfo.discount > 0 ? (
+                        <h2 className="text-red-500">৳{productInfo.price - (productInfo.price * productInfo?.discount)}</h2>
+                    ) : null
+                }
                 <p> {productInfo.weight} kg </p>
             </div>
 
