@@ -1,5 +1,5 @@
 import {Request,Response} from 'express';
-import { createSingleProduct, getProductsByStore,deleteSingleProduct, getAllProducts } from '../models/products.model';
+import { createSingleProduct, getProductsByStore,deleteSingleProduct, getAllProducts, getNoDiscountedProducts } from '../models/products.model';
 import { generateUUID } from '../utils/generic.util';
 import { IProduct } from '../models/products.model';
 
@@ -66,6 +66,20 @@ export async function getAllProductList(req:Request,res : Response){
         return res.json(result);
     } catch (error) {
         return res.send("can't not delete");
+    }
+}
+
+
+export const withoutDiscountedProducts= async (req:Request,res:Response)=>{
+    try{
+        const result=await getNoDiscountedProducts();
+        return res.status(200).json({
+            success:true,
+            result
+        });
+
+    }catch(err){
+        console.log(err);
     }
 }
 

@@ -12,14 +12,21 @@ export async function getAllProductList(req:Request,res : Response){
         return [];
     }
 }
+
+//product search with discount items
 export async function productSearch(req:Request,res : Response){
     try {
         const {q,cat} = req.query;
         const result =await searchProducts(cat,q);
+        const finalResult = result.filter((item : any)=>{   
+            if(item.discount){
+                return item;
+            }
+        });
 
         res.status(200).json({
             status:true,
-            data:result
+            data:finalResult
         });
     } catch (error) {
         return [];

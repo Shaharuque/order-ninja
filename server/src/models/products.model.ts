@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { generateUUID } from "../utils/generic.util";
+import cron from 'node-cron';
 
 export interface IProduct {
     id : string,
@@ -136,3 +137,49 @@ export async function searchProducts(category : any,text : any){
   }
 }
 
+// Function to calculate and update discounts
+async function updateProductDiscounts() {
+    const currentDate = new Date();
+    
+    // Find all products with expiry dates greater than the current date
+    const products = await productModel.find({ expiry_date: { $gt: currentDate } });
+  
+    products.forEach((product) => {
+      // Calculate the time remaining until expiry
+      const timeUntilExpiry = product.expiry_date.getTime() - currentDate.getTime();
+      const daysUntilExpiry = timeUntilExpiry / (1000 * 3600 * 24); // Convert to days
+  
+      // Define discount tiers based on days remaining
+      if (daysUntilExpiry <= 5) {
+        product.discount = 0.1; // 10% off for products expiring within a week
+      } else if (daysUntilExpiry <= 10) {
+        product.discount = 0.05; // 5% off for products expiring within two weeks
+      } else {
+        product.discount = 0; // No discount for products with more than two weeks until expiry
+      }
+      console.log('Product discounts updated.');
+      // Save the updated product
+      product.save();
+    });
+  }
+
+  export const scheduleDiscountUpdate=()=> {
+    // Schedule the task to run daily at a specific time (adjust as needed)
+    //production a each 5 days por por scheduler will run
+    cron.schedule('36 12 * * *', () => {
+      updateProductDiscounts();
+    });
+  }
+
+
+  //get discounted products which are not expired yet
+export const getNoDiscountedProducts = async () => {
+    try {
+        const currentDate = new Date();
+        const products = await productModel.find({ expiry_date: { $gt: currentDate } });
+        const discountedProducts = products.filter((product) => product.discount == 0);
+        return discountedProducts;
+    } catch (error) {
+        throw error;
+    }
+}

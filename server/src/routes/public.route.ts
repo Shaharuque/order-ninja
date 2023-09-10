@@ -1,5 +1,5 @@
 import { Router,Request,Response } from "express";
-import { addNewProduct ,deleteProduct} from "../controllers/product.controller";
+import { addNewProduct ,deleteProduct, withoutDiscountedProducts} from "../controllers/product.controller";
 import { getSingleProduct, getAllProducts } from "../models/products.model";
 import { getAllProductList, getPublicUsers,productSearch } from "../controllers/public.controller";
 
@@ -32,6 +32,8 @@ publicRouter.get('/single/:productId', async (req:Request,res: Response)=>{
         console.log(error);
     }
 });
+
+publicRouter.get('/without/discounted',withoutDiscountedProducts)
 
 // publicRouter.post('/search',productSearch);
 export default publicRouter;
