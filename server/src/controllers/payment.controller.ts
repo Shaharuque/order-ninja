@@ -11,7 +11,7 @@ export const paymentController = async (req: Request, res: Response) => {
 
     const { user_id,address,order_type,price,order_date,items } = req.body;
 
-    const stripeSecretKey = process.env.STRIPE_SECRET;
+    const stripeSecretKey = "sk_test_51K8U3bA8Wu6mzkGu5nh3VeyKBXsYzcknntMgfOne75UuPdvl2zincfWrFBxkOjQRwBZIjlODiNqrgLaGebi5DlCa00Ec2lfcDt";
 
     if (!stripeSecretKey) {
       throw new Error("Stripe Secret Key not found in environment variables");
@@ -71,8 +71,8 @@ export const paymentController = async (req: Request, res: Response) => {
       line_items: rawProduct,
       mode: "payment",
 
-      success_url:`${process.env.CLIENT_URL}/success?id=${paymentId}`,
-      cancel_url: `${process.env.CLIENT_URL}/cancel`,
+      success_url:`http://localhost:5173/success?id=${paymentId}`,
+      cancel_url: `http://localhost:5173/cancel`,
     });
 
 

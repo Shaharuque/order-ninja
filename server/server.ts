@@ -7,12 +7,14 @@ import expressApp from "./express.app";
 import http from 'http';
 import { connectToDatabase } from './db';
 import { scheduleDiscountUpdate } from './src/models/products.model';
+import { scheduleRecurringOrder } from './src/models/distributedOrder.model';
 const __port__ = process.env.PORT;
 
 
 const server = http.createServer(expressApp);
 
 scheduleDiscountUpdate();
+scheduleRecurringOrder()
 
 async function startServer() {
   await connectToDatabase();

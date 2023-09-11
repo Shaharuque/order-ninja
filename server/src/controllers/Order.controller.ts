@@ -29,6 +29,7 @@ export async function createOrder(req :Request, res : Response ){
     try {
         // console.log(req.body)
         const {items } = req.body;
+        console.log('order confirmed',items)
         
         const user_order_id  = await generateUUID();
 
