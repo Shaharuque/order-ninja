@@ -1,7 +1,7 @@
 // import { Col, Row } from "antd";
 // import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import style from "./Register.module.css";
-import {UserOutlined,MailOutlined,LockOutlined}  from "@ant-design/icons";
+import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 // import RegistrationForm from "./RegistrationForm";
 
 // const imgUrls = [
@@ -106,52 +106,46 @@ import {UserOutlined,MailOutlined,LockOutlined}  from "@ant-design/icons";
 
 // export default Register;
 
-
 import React, { Dispatch, SetStateAction } from "react";
-import { Button, Checkbox, Form, Input,Select } from 'antd';
+import { Button, Checkbox, Form, Input, Select } from "antd";
 import CustomInstance from "../../lib/axios";
-import { useNavigate } from "react-router-dom";
-
-
+import { Link, useNavigate } from "react-router-dom";
 
 const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo);
+  console.log("Failed:", errorInfo);
 };
 
 type FieldType = {
-    first_name ?: string,
-    last_name ?: string,
-    email?: string;
-    password?: string;
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  password?: string;
 };
 
-
 const Register: React.FC = () => {
+  const navigator = useNavigate();
 
-    const navigator = useNavigate();
+  const onFinish = async (values: any) => {
+    console.log("Success:", values);
 
-    const onFinish = async (values: any) => {
-        console.log('Success:', values);
-        let  isbussiness = true;
-        if(values.user_type =='supplier'){
-            isbussiness = false;
-        }
-        values.isbussiness = isbussiness;
+    let isbussiness = true;
+    if (values.user_type == "supplier") {
+      isbussiness = false;
+    }
+    values.isbussiness = isbussiness;
 
-        try {
-           const res = await CustomInstance.post('/register',values);
-            navigator('/login');
+    try {
+      const res = await CustomInstance.post("/register", values);
+      navigator("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-            
-        } catch (error) {
-            console.log(error);
-        }
-        
-      };
-    return (
-        <div className={style['registerFormDiv']}>
-            <h1 style={{marginBottom :'16px'}}>Register</h1>
-        <Form
+  return (
+    <div className={style["registerFormDiv"]}>
+      <h1 style={{ marginBottom: "16px" }}>Register</h1>
+      <Form
         name="basic"
         // labelCol={{ span: 8 }}
         // wrapperCol={{ span: 16 }}
@@ -162,39 +156,51 @@ const Register: React.FC = () => {
         autoComplete="off"
       >
         <Form.Item<FieldType>
-            
           label=""
           name="first_name"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          rules={[{ required: true, message: "Please input your username!" }]}
         >
-            
-          <Input prefix={<UserOutlined
-                        style={{ fontSize: "20px", color: "blue" }}
-                    />} placeholder='First Name'/>
+          <Input
+            prefix={
+              <UserOutlined style={{ fontSize: "20px", color: "blue" }} />
+            }
+            placeholder="First Name"
+          />
         </Form.Item>
         <Form.Item<FieldType>
           label=""
           name="last_name"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+          rules={[{ required: true, message: "Please input your username!" }]}
         >
-          <Input prefix={<UserOutlined
-                        style={{ fontSize: "20px", color: "blue" }}
-                    />} placeholder='Last Name'/>
+          <Input
+            prefix={
+              <UserOutlined style={{ fontSize: "20px", color: "blue" }} />
+            }
+            placeholder="Last Name"
+          />
         </Form.Item>
-    
+
         <Form.Item<FieldType>
           label=""
           name="email"
-          rules={[{ required: true, type : 'email' ,message: 'Please enter your email' }]}
+          rules={[
+            {
+              required: true,
+              type: "email",
+              message: "Please enter your email",
+            },
+          ]}
         >
-
-          <Input prefix={<MailOutlined
-                        style={{ fontSize: "20px", color: "blue" }}
-                    />} placeholder='Enter your Email'/>
+          <Input
+            prefix={
+              <MailOutlined style={{ fontSize: "20px", color: "blue" }} />
+            }
+            placeholder="Enter your Email"
+          />
         </Form.Item>
 
-        <Form.Item name='user_type'>
-          <Select  placeholder={"Register As:"}>
+        <Form.Item name="user_type">
+          <Select placeholder={"Register As:"}>
             <Select.Option value="supplier">Supplier</Select.Option>
             <Select.Option value="business">Business Owner</Select.Option>
           </Select>
@@ -203,22 +209,27 @@ const Register: React.FC = () => {
         <Form.Item<FieldType>
           label=""
           name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
+          rules={[{ required: true, message: "Please input your password!" }]}
         >
-          
-          <Input.Password prefix={<LockOutlined
-                        style={{ fontSize: "20px", color: "blue" }}
-                    />} placeholder='Enter Your Password'/>
+          <Input.Password
+            prefix={
+              <LockOutlined style={{ fontSize: "20px", color: "blue" }} />
+            }
+            placeholder="Enter Your Password"
+          />
         </Form.Item>
-    
-        <Form.Item style={{width:'100%'}}>
-          <Button style={{width:'100%'}}  type="primary" htmlType="submit">
+
+        <Form.Item style={{ width: "100%" }}>
+          <Button style={{ width: "100%" }} type="primary" htmlType="submit">
             Register
           </Button>
         </Form.Item>
       </Form>
-        </div>
-    )
+      <p>
+        I have an account go to <Link to="/login">Login now</Link> !
+      </p>
+    </div>
+  );
 };
 
 export default Register;
