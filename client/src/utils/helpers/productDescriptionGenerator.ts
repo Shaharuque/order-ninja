@@ -11,7 +11,7 @@ export const ItemDetailsGenerate = async (title: string): Promise<string | undef
         "X-RapidAPI-Host": "open-ai21.p.rapidapi.com",
       },
       data: {
-        message: `can you generate the advertisement for ${title} just provide me the text part.`,
+        message: `can you generate the description for ${title} so that i can advertise ${title} in ecommerce business to get better sale`,
       },
     };
 

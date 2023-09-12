@@ -8,26 +8,57 @@ import {
     getPathaoArea,
 } from "../../services/pathao.service";
 import CustomInstance from "../../lib/axios";
+import { useGetUserInfoQuery } from "../../features/user/userApiSlice";
 
 function OrderShippingAddress({ handleShipping, next }) {
     const { delivery_fee, setDeliveryFee, cartItems } = useShoppingCart();
     const [loading, setLoading] = useState(true);
-
-    const [showDate,setShowDate] = useState(false);
-
-    const handleDeliverySelect = (v)=>{
-      if(v=='weekly'){
-        setShowDate(true);
-      }else{
-        setShowDate(false);
-      }
-    }
-
-    const [formHook] = Form.useForm();
+    const [showDate, setShowDate] = useState(false);
 
     const [cityList, setCityList] = useState([]);
     const [zoneList, setZoneList] = useState([]);
     const [areaList, setAreaList] = useState([]);
+    const userId = localStorage.getItem('user_id')
+    console.log('User Id', userId)
+
+    //getting user data
+    const { data: userData, isLoading: userLaoding } = useGetUserInfoQuery({ userId })
+    console.log('User Data', Number(userData?.city))
+
+    useEffect(() => {
+        if (userData) {
+            const getZoneList = getPathaoZone( Number(userData?.city)).then((res) => {
+                console.log('Zone List', res)
+                setZoneList(
+                    res.map((v) => ({ value: v.zone_id, label: v.zone_name }))
+                );
+            });
+
+            const getAreaList = getPathaoArea(546).then((res) => {
+                console.log('Area List', res)
+                setAreaList(
+                    res.map((v) => ({ value: v.area_id, label: v.area_name }))
+                );
+            });
+
+        }
+    }, [ (userData?.city)])
+
+    console.log('first zone list render', zoneList)
+
+
+
+    const handleDeliverySelect = (v) => {
+        if (v == 'weekly') {
+            setShowDate(true);
+        } else {
+            setShowDate(false);
+        }
+    }
+
+    const [formHook] = Form.useForm();
+
+
 
     useEffect(() => {
         const calls = async () => {
@@ -49,9 +80,9 @@ function OrderShippingAddress({ handleShipping, next }) {
     const onFinish = async (values) => {
         console.log(values);
 
-        if(Object.values(values).includes(undefined)){
-          message.error('please fill up all the fields');
-          return ;
+        if (Object.values(values).includes(undefined)) {
+            message.error('please fill up all the fields');
+            return;
         }
         // get shipping cost
 
@@ -83,6 +114,12 @@ function OrderShippingAddress({ handleShipping, next }) {
                 onFinish={onFinish}
                 layout="vertical"
                 form={formHook}
+                initialValues={{
+                    city: 32,
+                    zone: 546,
+                    area: 7631,
+                    phone:'01799856586',
+                }}
             >
                 <Row>
                     <Col span={10}>
@@ -128,19 +165,19 @@ function OrderShippingAddress({ handleShipping, next }) {
                 </Row>
                 <Row>
                     <Col span={10}>
-                        <Form.Item  name="order_type" label="Order Type">
-                        <Select
+                        <Form.Item name="order_type" label="Order Type">
+                            <Select
                                 onSelect={handleDeliverySelect}
                                 placeholder="select order Type"
                                 options={[
-                                  {
-                                    label : 'Standard',
-                                    value:'standard'
-                                  },
-                                  {
-                                    label:'Weekly',
-                                    value:'weekly'
-                                  }
+                                    {
+                                        label: 'Standard',
+                                        value: 'standard'
+                                    },
+                                    {
+                                        label: 'Weekly',
+                                        value: 'weekly'
+                                    }
 
                                 ]}
                             />
@@ -148,12 +185,12 @@ function OrderShippingAddress({ handleShipping, next }) {
                     </Col>
                     {
 
-                     showDate ? <Col offset={4} span={10}>
-                        <Form.Item name="order_date" label="Order Date">
-                        <DatePicker></DatePicker>
-                        </Form.Item>
-                    </Col> : null 
-                    
+                        showDate ? <Col offset={4} span={10}>
+                            <Form.Item name="order_date" label="Order Date">
+                                <DatePicker></DatePicker>
+                            </Form.Item>
+                        </Col> : null
+
                     }
                 </Row>
 

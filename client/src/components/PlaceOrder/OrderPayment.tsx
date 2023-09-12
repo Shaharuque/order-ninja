@@ -4,7 +4,7 @@ import { useShoppingCart } from '../../context/ShoppingCartContext';
 import CustomInstance from '../../lib/axios';
 import {loadStripe} from '@stripe/stripe-js';
 
-const PUBLIK_KEY=`pk_test_51Nmyt3CG50qOeDLP00cDmo37GDCsYwjBrQBbQWFi3AJ2zlCtLUBXiDt58M1DehjfwObwS8NjRYrguvxdskFM0CW200bQ3sNSvB`;
+const PUBLIK_KEY=`pk_test_51K8U3bA8Wu6mzkGuZsrT10w2wnveRW9iGAKLXMSIaAaiVCbAQWBCTf0hTqOc6KdlyMmOPJkkBO5vyvKzjSRPyLps00DZH6fW4z`;
 
 
 function OrderPayment({next,amount,shipping}) {

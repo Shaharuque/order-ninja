@@ -63,9 +63,9 @@ export async function getPathaoCity(){
 }
 
 export async function getPathaoZone(cityId){
-    
+    const result=Number(cityId)
     try {
-        const {data:{data}} = await CustomInstance.get(`/pathao/zone/${cityId}`);
+        const {data:{data}} = await CustomInstance.get(`/pathao/zone/${result}`);
         return data;
     } catch (error) {
         console.log(error);

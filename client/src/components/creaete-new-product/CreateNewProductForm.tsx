@@ -153,6 +153,7 @@ function CreateNewProductForm({ updater, setOpen }) {
 
             const newProduct = {
                 ...value,
+                description: desc,
                 expiry_date: expiryDate,
                 images: imgUrls,
             };
@@ -176,6 +177,7 @@ function CreateNewProductForm({ updater, setOpen }) {
                 "stock",
             ]);
             setFileList([]);
+            setDesc('')
             message.success(`Product Created!`);
         } catch (error) {
             console.log(error);
@@ -185,19 +187,23 @@ function CreateNewProductForm({ updater, setOpen }) {
         // console.log(ddr)
     };
 
-    const [title,setTitle]=useState('')
-    const [desc,setDesc]=useState('')
-    const [loading,setLoading]=useState(false)
-    const handleDescGenerate=async()=>{
+    const [title, setTitle] = useState('')
+    const [desc, setDesc] = useState('')
+    const [loading, setLoading] = useState(false)
+    const [isDescUpdated, setIsDescUpdated] = useState(false);
+    const handleDescGenerate = async () => {
         if (title) {
             setLoading(true)
             const result = await ItemDetailsGenerate(title)
             if (result) {
                 setDesc(result)
                 setLoading(false)
+                setIsDescUpdated(true)
             }
+
         }
     }
+    console.log(desc)
 
     return (
         <Form
@@ -206,8 +212,8 @@ function CreateNewProductForm({ updater, setOpen }) {
             layout="vertical"
             onFinish={onFinish}
             initialValues={{
-                ["description"]: desc 
-              }}
+                ["description"]: desc
+            }}
         >
             <Row>
                 <Col span={12}>
@@ -221,7 +227,7 @@ function CreateNewProductForm({ updater, setOpen }) {
                             },
                         ]}
                     >
-                        <Input onChange={(e)=>setTitle(e.target.value)} placeholder="Product Name" />
+                        <Input onChange={(e) => setTitle(e.target.value)} placeholder="Product Name" />
                     </Form.Item>
                 </Col>
                 <Col span={8} offset={2}>
@@ -243,21 +249,24 @@ function CreateNewProductForm({ updater, setOpen }) {
                     </Form.Item>
                 </Col>
             </Row>
-            <Form.Item
-                name="description"
-                label="Description"
-                rules={[
-                    {
-                        required: true,
-                        message: "Please input your Description!",
-                    },
-                ]}
-            >
-                <Input.TextArea value={desc} rows={3} placeholder="Product Description" />
-            </Form.Item>
+
+            <div style={{display:'flex',flexDirection:'column', marginBottom:'10px'}}>
+                <label>
+                    Description
+                </label>
+                <textarea
+                    style={{ width: '100%',border:'1px solid gray', borderRadius:'5px' }}
+                    onChange={(e) => setDesc(e.target.value)}
+                    defaultValue={isDescUpdated ? desc : undefined}
+                    rows={8}
+                    placeholder="Product Description" />
+            </div>
+
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
                 <button type="button" onClick={handleDescGenerate} style={{ padding: '5px', borderRadius: '5px' }}>Generate</button>
-                <h1 style={{ fontWeight: 'normal', fontSize: '12px' }}>Loading...</h1>
+                {
+                    loading && <span style={{ marginLeft: '10px' }}>Loading...</span>
+                }
             </div>
 
             <Row>
@@ -327,12 +336,12 @@ function CreateNewProductForm({ updater, setOpen }) {
             </Row>
 
             <Row>
-                <Col span={10}>
-                    <Form.Item label="DatePicker">
+                <Col span={10} >
+                    <Form.Item label="Expiry Date">
                         <DatePicker onChange={onChange} />
                     </Form.Item>
                 </Col>
-                <Col span={10} offset={4}>
+                {/* <Col span={10} offset={4}>
                     <Form.Item
                         label="Discount"
                         name="discount"
@@ -346,7 +355,7 @@ function CreateNewProductForm({ updater, setOpen }) {
                     >
                         <InputNumber style={{ width: "100%" }} />
                     </Form.Item>
-                </Col>
+                </Col> */}
             </Row>
 
             <Upload {...props}>
