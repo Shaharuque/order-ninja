@@ -22,6 +22,8 @@ export async function registrationRequest(req: Request, res: Response) {
             });
         }
 
+
+
         const id = await generateUUID();
         const role = isbussiness ? "business" : "supplier";
 
@@ -38,7 +40,6 @@ export async function registrationRequest(req: Request, res: Response) {
             email: email,
             role: role
         };
-
         const code = generateOTP(6);
 
         let data = await redis.set(`${code}`, JSON.stringify(userObj), { EX: 60 * 3 });
@@ -55,12 +56,15 @@ export async function registrationRequest(req: Request, res: Response) {
         }
     } catch (error) {
         // console.log((error as Error).message);
-        return res.status(500).send((error as Error).message);
+        return res.status(500).json({
+            status: "error",
+            error
+        })
     }
 }
 
 
-export async function newUserController(req: Request, res: Response) {
+export async function registerConfirm(req: Request, res: Response) {
     try {
         console.log(req.body.code);
         const data = await redis.get(`${req.body.code}`);

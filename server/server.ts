@@ -8,6 +8,7 @@ import http from 'http';
 import { connectToDatabase } from './db';
 import { scheduleDiscountUpdate } from './src/models/products.model';
 import { scheduleRecurringOrder } from './src/models/distributedOrder.model';
+import redis from './src/services/redis.service';
 const __port__ = process.env.PORT;
 
 
@@ -18,7 +19,9 @@ scheduleRecurringOrder()
 
 async function startServer() {
   await connectToDatabase();
-  server.listen(__port__, () =>{
+  await redis.connect();
+
+  server.listen(__port__, () => {
     console.log(`Listening on http://localhost:${__port__}`);
   });
 }
