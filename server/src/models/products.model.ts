@@ -147,9 +147,10 @@ async function updateProductDiscounts() {
 
   products.forEach((product) => {
     // Calculate the time remaining until expiry
-    const timeUntilExpiry = product.expiry_date.getTime() - currentDate.getTime();
-    const daysUntilExpiry = timeUntilExpiry / (1000 * 3600); // Convert to days
-    console.log(daysUntilExpiry)
+    const timeUntilExpiry =
+      product.expiry_date.getTime() - currentDate.getTime();
+    const daysUntilExpiry = Math.ceil(timeUntilExpiry / (1000 * 3600)); // Convert to days
+    //console.log(daysUntilExpiry)
     // let newDate = new Date(prdc?.expiry_date);
     // let currDate = new Date();
     // console.log((newDate.toLocaleTimeString('en-GB')));
@@ -164,7 +165,11 @@ async function updateProductDiscounts() {
     //     product.discount = 0; // No discount for products with more than two weeks until expiry
     //   }
 
-    if (daysUntilExpiry <= 72){
+    //Minimum stock level for discount to be applied
+    const MINIMUMStockLevelThreshold =((product.stock - product.sold) / product.stock) * 100;
+    //console.log('MINIMUMStockLevelThreshold',MINIMUMStockLevelThreshold)
+    // Maximum expiry time (in days) for a discount to be applied 3 days
+    if (daysUntilExpiry <= 72 && MINIMUMStockLevelThreshold > 50) {
       const probableLossAmount = product.price * (product.stock - product.sold);
       if (probableLossAmount > 50000) {
         product.discount = 0.4;
@@ -175,32 +180,79 @@ async function updateProductDiscounts() {
       }
     }
 
-
-
-    // Define discount tiers based on days remaining
-   if (daysUntilExpiry <= 48 && daysUntilExpiry >= 25) {
-      product.discount = product.discount + 0.1; // 10% off for products expiring within two weeks
-    } else if (daysUntilExpiry <= 24 && daysUntilExpiry >= 17) {
-      product.discount = product.discount + 0.25 ; // No discount for products with more than two weeks until expiry
-    }else if (daysUntilExpiry <= 16 && daysUntilExpiry >= 12){
-      product.discount = product.discount + 0.35;
-    }else if (daysUntilExpiry <= 11 && daysUntilExpiry >= 9){
-      product.discount = 0.7;
-    }else if (daysUntilExpiry <= 8 && daysUntilExpiry >= 6){
-        product.discount = 0.8 ;
+    if (product.discount < 0.8) {
+      // Define discount tiers based on days remaining
+      if (daysUntilExpiry <= 48 && daysUntilExpiry >= 25) {
+        product.discount = product.discount + 0.1;
+      } else if (daysUntilExpiry <= 24 && daysUntilExpiry >= 17) {
+        console.log("enter here " + product.discount, daysUntilExpiry);
+        product.discount = product.discount + 0.25;
+      } else if (daysUntilExpiry <= 16 && daysUntilExpiry >= 12) {
+        product.discount = product.discount + 0.35;
+      } else if (daysUntilExpiry <= 11 && daysUntilExpiry >= 9) {
+        product.discount = 0.7;
+      } else if (daysUntilExpiry <= 8 && daysUntilExpiry >= 6) {
+        product.discount = 0.8;
+      }
     }
 
-
-    console.log("Product discounts updated.");
+    //console.log("Product discounts updated.");
     // Save the updated product
     product.save();
   });
 }
 
-export const scheduleDiscountUpdate = () => {
-  // Schedule the task to run daily at a specific time (adjust as needed)
-  //production a each 5 days por por scheduler will run
-  cron.schedule("10 10 * * *", () => {
+// export const scheduleDiscountUpdate = async () => {
+//   const currentDate = new Date();
+
+//   // Find all products with expiry dates greater than the current date
+//   const products = await productModel.find({
+//     expiry_date: { $gt: currentDate },
+//   });
+//   //if product expiry date is less than 48 hours the updateProductDiscounts will be run every 2 hours
+//   cron.schedule("57 13 * * *", () => {
+//     updateProductDiscounts();
+//   });
+// };
+
+export const scheduleDiscountUpdate = async () => {
+  const currentDate = new Date();
+
+  // Find all products with expiry dates greater than the current date
+  const products = await productModel.find({
+    expiry_date: { $gt: currentDate },
+  });
+
+  // Define different cron schedules based on the conditions
+  let cronSchedule = "";
+
+  if (
+    products.some((product) => {
+      const timeUntilExpiry =
+        product.expiry_date.getTime() - currentDate.getTime();
+      const hoursUntilExpiry = timeUntilExpiry / (1000 * 3600); // Convert to hours
+      return hoursUntilExpiry < 18;
+    })
+  ) {
+    // If any product has less than 12 hours until expiry, run every 1 hour
+    cronSchedule = "* * * * *";
+  } else if (
+    products.some((product) => {
+      const timeUntilExpiry =
+        product.expiry_date.getTime() - currentDate.getTime();
+      const hoursUntilExpiry = timeUntilExpiry / (1000 * 3600); // Convert to hours
+      return hoursUntilExpiry < 48;
+    })
+  ) {
+    // If any product has less than 48 hours until expiry, run every 2 hours
+    cronSchedule = "0 */2 * * *";
+  } else {
+    // Default schedule (e.g., once a day)
+    cronSchedule = "0 0 * * *";
+  }
+
+  // Schedule the task based on the determined cron schedule
+  cron.schedule(cronSchedule, () => {
     updateProductDiscounts();
   });
 };
