@@ -35,7 +35,7 @@ export default function BusinessHeaderComp({ pageName = 'Dashboard' }) {
         <div className={style["headerContainer"]}>
             <div className={style["pageName"]}>{capitalize(pageName.replace('/',''))}</div>
             <div className={style["userIconDiv"]}>
-                <h1 >Notifications</h1>
+                {/* <h1 >Notifications</h1> */}
                 {/* <p>user name</p> */}
                 {/* <Icontext icon={<UserOutlined />} text={userName} /> */}
                 <ShoppingCart />

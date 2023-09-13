@@ -1,6 +1,6 @@
-import React, { useState, useEffect ,useContext} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import CustomInstance from "../../lib/axios";
-import { UpOutlined , DownOutlined } from "@ant-design/icons";
+import { UpOutlined, DownOutlined } from "@ant-design/icons";
 import ShoppingCartContext from "../../context/ShoppingCartContext";
 import { Empty } from "antd";
 
@@ -14,18 +14,18 @@ interface ISingleCartComp {
 const SingleCartItem: React.FC<ISingleCartComp> = ({ itemId, quantity }) => {
     const [itemData, setItemData] = useState(null);
 
-    const {increaseCartQuantity,decreaseCartQuantity} = useContext(ShoppingCartContext);
+    const { increaseCartQuantity, decreaseCartQuantity } = useContext(ShoppingCartContext);
 
-    const handleUp = ()=>{
+    const handleUp = () => {
 
-        
 
-        console.log(`up for `,itemData.name);
+
+        console.log(`up for `, itemData.name);
         increaseCartQuantity(itemData.id);
     }
 
-    const handleDown = ()=>{
-        console.log(`up for `,itemData.name);
+    const handleDown = () => {
+        console.log(`up for `, itemData.name);
         decreaseCartQuantity(itemData.id);
     }
 
@@ -47,13 +47,13 @@ const SingleCartItem: React.FC<ISingleCartComp> = ({ itemId, quantity }) => {
 
     {
         return itemData ? (
-            <div style={{ display: "flex",gap:'8px' ,alignItems: "center",marginBottom:'8px'}}>
+            <div style={{ display: "flex", gap: '8px', alignItems: "center", marginBottom: '8px' }}>
                 <div
                     style={{
                         display: "flex",
-                        width:'30px',
+                        width: '30px',
                         flexDirection: "column",
-                        alignItems: "center",    
+                        alignItems: "center",
                     }}
                 >
                     <button onClick={handleUp}> <UpOutlined /> </button>
@@ -69,8 +69,8 @@ const SingleCartItem: React.FC<ISingleCartComp> = ({ itemId, quantity }) => {
                         alt=""
                     />
                 </div>
-                <div style={{width:'250px',textAlign:'center'}} > {itemData.name} </div>
-                <div style={{width:'60px'}}> ৳ {quantity * itemData.price} </div>
+                <div style={{ width: '250px', textAlign: 'center' }} > {itemData.name} </div>
+                <div style={{ width: '60px' }}> ৳ {quantity * (itemData.price - (itemData.price * itemData.discount))} </div>
             </div>
         ) : (
             <Empty />

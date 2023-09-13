@@ -165,7 +165,7 @@ function SingleProductCard({ productInfo }: any) {
                         }}
                     ></div>
 
-                    <p>Price : {productInfo.price} </p>
+                    <p>Price : {productInfo.price-(productInfo?.price * productInfo?.discount)} </p>
                     <p>Weight : {productInfo.weight} </p>
                     <p>Availabe : {productInfo.stock} units</p>
                     {/* <div style={{borderBottom:'1px solid black',marginTop:'8px'}}></div> */}
