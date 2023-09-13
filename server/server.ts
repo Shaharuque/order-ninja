@@ -14,30 +14,30 @@ const __port__ = process.env.PORT;
 
 
 const server = http.createServer(expressApp);
-
 export const io = new Server(server);
 
-io.on('connection', (socket) => {
-  // console.log('A user connected');
 
-  socket.on("joinRoom", ({ userId }: any) => {
-    socket.join(`${userId} `);
-    console.log(`${userId} joined room`);
-  });
-
-  socket.on('disconnect', () => {
-    console.log('User disconnected');
-  });
-
-});
-
-
-scheduleDiscountUpdate();
-scheduleRecurringOrder()
 
 async function startServer() {
   await connectToDatabase();
   await redis.connect();
+  scheduleDiscountUpdate();
+  scheduleRecurringOrder();
+
+  io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    socket.on("joinRoom", ({ userId }: any) => {
+      socket.join(`${userId} `);
+      console.log(`${userId} joined room`);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected');
+    });
+
+  });
+
 
   server.listen(__port__, () => {
     console.log(`Listening on http://localhost:${__port__}`);

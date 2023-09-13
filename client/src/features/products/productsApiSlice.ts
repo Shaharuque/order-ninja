@@ -15,11 +15,7 @@ export const productsApiSlice = apiSlice.injectEndpoints({
         credentials: "include",
       }),
     }),
-
-
   }),
 });
 
-export const {
-    useGetNoDiscountedProductsQuery,
-} = productsApiSlice;
+export const { useGetNoDiscountedProductsQuery } = productsApiSlice;

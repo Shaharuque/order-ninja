@@ -130,7 +130,7 @@ type OtpFieldType = {
 const Register: React.FC = () => {
   const { Countdown } = Statistic;
   const navigator = useNavigate();
-  const [otpStatus, setOtpStatus] = useState<boolean>(true);
+  const [otpStatus, setOtpStatus] = useState<boolean>(false);
   // const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Dayjs is also OK
   const deadline = Date.now() + 1000 * 2 * 60; // Dayjs is also OK
 

@@ -23,7 +23,7 @@ function BusinessMarketPlace() {
     if (socket) {
       socket.emit("joinRoom", { userId: user });
     }
-  }, [socket]);
+  }, [socket, user]);
 
   useEffect(() => {
     if (socket) {
