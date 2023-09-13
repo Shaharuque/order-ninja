@@ -1,50 +1,48 @@
 import mongoose from "mongoose";
 import { generateUUID } from "../utils/generic.util";
-import cron from "node-cron";
+import cron from 'node-cron';
 
 export interface IProduct {
-    id: string;
-    store_id: string;
-    name: string;
-    category: string[];
-    price: number;
-    stock: number;
-    sold: number;
-    description: string;
-    images: string[];
-    unit_size: string;
-    weight: string;
-    reviews: [];
-    expiry_date: Date;
-    discount: number;
+    id: string,
+    store_id: string,
+    name: string,
+    category: string[],
+    price: number,
+    stock: number,
+    sold: number,
+    description: string,
+    images: string[],
+    unit_size: string,
+    weight: string,
+    reviews: [],
+    expiry_date: Date,
+    discount: number,
 }
-const productSchema = new mongoose.Schema<IProduct>(
-    {
-        id: String,
-        store_id: String,
-        name: String,
-        category: Array,
-        price: Number,
-        stock: {
-            type: "number",
-            min: 0,
-        },
-        sold: {
-            type: "number",
-            default: 0,
-        },
-        description: String,
-        images: Array,
-        reviews: Array,
-        unit_size: Number,
-        weight: Number,
-        expiry_date: Date,
-        discount: Number,
+const productSchema = new mongoose.Schema<IProduct>({
+    id: String,
+    store_id: String,
+    name: String,
+    category: Array,
+    price: Number,
+    stock: {
+        type: 'number',
+        min: 0
     },
-    {
-        timestamps: true,
-    }
-);
+    sold: {
+        type: 'number',
+        default: 0
+    },
+    description: String,
+    images: Array,
+    reviews: Array,
+    unit_size: Number,
+    weight: Number,
+    expiry_date: Date,
+    discount: Number,
+
+}, {
+    timestamps: true
+});
 
 export const productModel = mongoose.model<IProduct>('product', productSchema);
 
@@ -178,14 +176,10 @@ export const scheduleDiscountUpdate = () => {
 export const getNoDiscountedProducts = async () => {
     try {
         const currentDate = new Date();
-        const products = await productModel.find({
-            expiry_date: { $gt: currentDate },
-        });
-        const discountedProducts = products.filter(
-            (product) => product.discount == 0
-        );
+        const products = await productModel.find({ expiry_date: { $gt: currentDate } });
+        const discountedProducts = products.filter((product) => product.discount == 0);
         return discountedProducts;
     } catch (error) {
         throw error;
     }
-};
+}
