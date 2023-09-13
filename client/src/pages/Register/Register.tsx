@@ -106,8 +106,9 @@ import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons";
 
 // export default Register;
 
+import type { CountdownProps } from "antd";
 import React, { Dispatch, SetStateAction, useState } from "react";
-import { Button, Checkbox, Form, Input, Select } from "antd";
+import { Button, Checkbox, Form, Input, Select, Statistic } from "antd";
 import CustomInstance from "../../lib/axios";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -127,8 +128,16 @@ type OtpFieldType = {
 };
 
 const Register: React.FC = () => {
+  const { Countdown } = Statistic;
   const navigator = useNavigate();
-  const [otpStatus, setOtpStatus] = useState(false);
+  const [otpStatus, setOtpStatus] = useState<boolean>(true);
+  // const deadline = Date.now() + 1000 * 60 * 60 * 24 * 2 + 1000 * 30; // Dayjs is also OK
+  const deadline = Date.now() + 1000 * 2 * 60; // Dayjs is also OK
+
+  const onFinish: CountdownProps["onFinish"] = () => {
+    console.log("finished!");
+    setOtpStatus(false);
+  };
 
   const requestForOtp = async (values: any) => {
     let isbussiness = true;
@@ -273,7 +282,10 @@ const Register: React.FC = () => {
         </>
       ) : (
         <>
-          <h4 style={{ marginBottom: "16px" }}>Input Your OTP</h4>
+          <h4>Input Your OTP</h4>
+          <small style={{ marginBottom: "16px" }}>
+            Check your mail & confirm by submitting your OTP
+          </small>
           <Form
             name="basic"
             // labelCol={{ span: 8 }}
@@ -307,7 +319,15 @@ const Register: React.FC = () => {
               </Button>
             </Form.Item>
           </Form>
-
+          <p>
+            {" "}
+            <Countdown
+              title=""
+              value={deadline}
+              onFinish={onFinish}
+              format="mm:ss"
+            />
+          </p>
           <p
             onClick={() => {
               resetDataForOTP();

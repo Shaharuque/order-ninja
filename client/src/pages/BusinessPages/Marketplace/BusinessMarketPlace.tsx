@@ -7,7 +7,7 @@ import MarketProductCategory from "./MarketPlaceCategory/MarketProductCategory";
 import { io } from "socket.io-client";
 
 function BusinessMarketPlace() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [category, setCategory] = useState("");
   const [cart, setCart] = useState({});
   const [update, forceUpdate] = useState(Date.now());
@@ -36,7 +36,7 @@ function BusinessMarketPlace() {
     }
   }, [socket]);
 
-  const handleSearch = (value) => {
+  const handleSearch = (value: string) => {
     setSearchQuery(value);
     // Perform search logic here based on the search query
   };
@@ -45,20 +45,6 @@ function BusinessMarketPlace() {
     console.log(`selected `, value);
     setCategory((prv) => {
       if (prv == value.id) {
-        return "";
-      }
-      return value.id;
-    });
-  };
-
-  const handleSearch = (value: any) => {
-    setSearchQuery(value);
-    // Perform search logic here based on the search query
-  };
-  const handleCategory = (value: object) => {
-    console.log(`selected `, value);
-    setCategory((prv) => {
-      if (prv == value?.id) {
         return "";
       }
       return value.id;
