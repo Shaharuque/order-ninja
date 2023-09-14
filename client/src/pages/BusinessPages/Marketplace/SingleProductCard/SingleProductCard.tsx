@@ -5,7 +5,7 @@ import ShoppingCartContext from "../../../../context/ShoppingCartContext";
 
 
 function SingleProductCard({ productInfo }: any) {
-    console.log('product Info : ',productInfo)
+    // console.log('product Info : ',productInfo)
     const [count, setCount] = useState(0);
     const [showOptions, setShowOptions] = useState(false);
 
@@ -41,7 +41,7 @@ function SingleProductCard({ productInfo }: any) {
         setIsModalOpen(false);
     };
 
-    const handleDetails = () => {};
+    const handleDetails = () => { };
 
     return (
         <div className={style["parentCardContainer"]}>
@@ -119,14 +119,14 @@ function SingleProductCard({ productInfo }: any) {
                     </div>
                 </div>
             </div>
-            
+
             <div className={style["productDetailsDiv"]}>
                 <p> {productInfo.name} </p>
                 {
                     productInfo.discount > 0 ? (
                         <h3 className={style["originalPrice"]}> ৳{productInfo.price} </h3>
-                    ):
-                    <h3> ৳{productInfo.price} </h3>
+                    ) :
+                        <h3> ৳{productInfo.price} </h3>
                 }
                 {
                     productInfo.discount > 0 ? (
@@ -165,7 +165,7 @@ function SingleProductCard({ productInfo }: any) {
                         }}
                     ></div>
 
-                    <p>Price : {productInfo.price-(productInfo?.price * productInfo?.discount)} </p>
+                    <p>Price : {productInfo.price - (productInfo?.price * productInfo?.discount)} </p>
                     <p>Weight : {productInfo.weight} </p>
                     <p>Availabe : {productInfo.stock} units</p>
                     {/* <div style={{borderBottom:'1px solid black',marginTop:'8px'}}></div> */}
