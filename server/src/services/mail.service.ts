@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-export function generateOTP(size = 4) {
+export function generateOTP(size = 4): string {
     const digits = '0123456789';
     let OTP = '';
     for (let i = 0; i < size; i++) {
@@ -19,9 +19,9 @@ export function generateOTP(size = 4) {
     return OTP;
 }
 
-export async function sendMail(to: string, subject :string, message: string) {
-    if(to.length==0 || !message.length || !subject.length){
-        console.log(`to/subject/message is missing`,to,subject,message);
+export async function sendMail(to: string, subject: string, message: string) {
+    if (to.length == 0 || !message.length || !subject.length) {
+        console.log(`to/subject/message is missing`, to, subject, message);
         return false;
     }
     const mailOptions = {
@@ -41,13 +41,19 @@ export async function sendMail(to: string, subject :string, message: string) {
     }
 }
 
-export async function sendOTP(to:string):Promise<Boolean> {
+export async function sendOTP(to: string, code: string): Promise<Boolean> {
     const subject = "Order Ninja - OTP";
-    const _otp = generateOTP(4);
+    let _otp: string;
+    if (code) {
+        _otp = code;
+    } else {
+        _otp = generateOTP(4);
+    }
+
     const message = `${_otp}`
     try {
-        const result = await sendMail(to,subject,message);
-        if(result){
+        const result = await sendMail(to, subject, message);
+        if (result) {
             return true;
         }
     } catch (error) {
