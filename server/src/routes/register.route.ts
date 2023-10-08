@@ -6,6 +6,7 @@ const registrationRouter = Router();
 
 registrationRouter.post('/request', registrationRequest);
 registrationRouter.post('/confirm', registerConfirm);
+registrationRouter.post('/g-registration', registerConfirm);
 
 
 export default registrationRouter;

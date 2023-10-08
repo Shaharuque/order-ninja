@@ -95,3 +95,32 @@ export async function registerConfirm(req: Request, res: Response) {
         return res.status(500).send((error as Error).message);
     }
 }
+
+
+export async function googleRegistration(req: Request, res: Response) {
+    try {
+        console.log(req.body.token, req.body.user);
+        const data = await redis.get(`${req.body.code}`);
+
+        const confirmData = JSON.parse(data as string);
+        const { role, first_name, id, last_name, isbussiness, password, email } = confirmData;
+
+        if (role == 'supplier') {
+            const drd = await createStore(id, first_name + ' ' + last_name);
+            confirmData.store_id = drd.id;
+            console.log('new store created', confirmData);
+        }
+        const dbRes = await createUser(confirmData);
+        console.log(confirmData, dbRes);
+
+
+        return res.status(200).json({
+            message: 'created',
+            status: 'ok',
+            data: dbRes
+        });
+    } catch (error) {
+        // console.log((error as Error).message);
+        return res.status(500).send((error as Error).message);
+    }
+}
