@@ -19,17 +19,17 @@ function PlaceOrder() {
     const { token } = theme.useToken();
     const [shipping, setShippingInfo] = useState({});
 
-    const [totalCost,setTotalCost] = useState(0);
+    const [totalCost, setTotalCost] = useState(0);
 
-    const handleTotalCost = (n)=>{
+    const handleTotalCost = (n) => {
         setTotalCost(n);
     }
 
 
     const [current, setCurrent] = useState(0);
 
-    const handleShipping = (data)=>{
-      setShippingInfo(data);
+    const handleShipping = (data) => {
+        setShippingInfo(data);
     }
 
     const next = () => {
@@ -46,11 +46,11 @@ function PlaceOrder() {
         },
         {
             title: "Order Summary",
-            content: <OrderSummary shipping={shipping} setTotal = {handleTotalCost} next = {next} />,
+            content: <OrderSummary shipping={shipping} setTotal={handleTotalCost} next={next} />,
         },
         {
             title: "Payment",
-            content: <OrderPayment shipping = {shipping} amount = {totalCost} next={next}/>,
+            content: <OrderPayment shipping={shipping} amount={totalCost} next={next} />,
         },
     ];
 
@@ -58,10 +58,10 @@ function PlaceOrder() {
 
     return (
         <BusinessLayout>
-          <div style={{width:'100%',display:'flex',justifyContent:'center',marginTop:'16px'}}>
+            <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
 
-            <Steps size="small" style={{width:'50vw'}} current={current} items={items} />
-          </div>
+                <Steps size="small" style={{ width: '50vw' }} current={current} items={items} />
+            </div>
             <div
                 style={{
                     // backgroundColor: "gray",

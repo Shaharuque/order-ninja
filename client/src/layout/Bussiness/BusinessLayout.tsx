@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   DesktopOutlined,
   SettingOutlined,
@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import BusinessHeaderComp from "../../components/Headercomp/BusinessHeaderComp";
 import { ShoppingCartProvider } from "../../context/ShoppingCartContext";
 import { removeLocalUserInfo } from "../../utils/helpers/setUserLocalInfo";
+import { LogoutProvider } from "../../App";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -65,6 +66,7 @@ const BusinessLayout: React.FC<Props> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
 
+  const { haveToken, logoutFunc } = useContext(LogoutProvider);
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState("/");
   const {
@@ -105,12 +107,8 @@ const BusinessLayout: React.FC<Props> = (props) => {
               theme="dark"
               onClick={(item) => {
                 console.log(item);
-                if (item.key === "/logout") {
-                  removeLocalUserInfo();
-                  navigate("/login");
-                } else {
-                  navigate(item.key);
-                }
+                if (item.key === "/logout") logoutFunc();
+                else navigate(item.key)
               }}
               mode="inline"
               items={siderBottomItem}

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useEffect } from "react";
-
+import React, { useContext, useEffect } from "react";
+import { FcGoogle } from "react-icons/fc";
 import { Button, Checkbox, Form, Input, notification } from "antd";
 import CustomInstance from "../../lib/axios";
 import { AxiosError } from "axios";
@@ -12,6 +12,8 @@ import {
   setLocalUserInfo,
 } from "../../utils/helpers/setUserLocalInfo";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { LogoutProvider } from "../../App";
+import { signInWithGoogle } from "../../utils/utils.firebase";
 
 const onFinishFailed = (errorInfo: any) => {
   console.log("Failed:", errorInfo);
@@ -24,9 +26,10 @@ type FieldType = {
 };
 
 const Login: React.FC = () => {
+  const { haveToken, logoutFunc, setHaveToken } = useContext(LogoutProvider);
   const navigator = useNavigate();
-  const { setUserId, setRole, setName, setLoggedIn, setToken, setEmail } =
-    useAuth();
+  const { setUserId, setRole, setName, setLoggedIn, setToken, setEmail } = useAuth();
+
   const onFinish = async (values: any) => {
     console.log("Success:", values);
     try {
@@ -46,7 +49,8 @@ const Login: React.FC = () => {
         loggedIn: true,
       });
 
-      navigator("/dashboard");
+      setHaveToken(true);
+      navigator("/");
     } catch (error) {
       console.log(error);
       // const err : any = (error as AxiosError).response?.data;
@@ -56,12 +60,11 @@ const Login: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   const res = getLocalUserInfo();
-  //   if(res.loggedIn && res.token){
-  //     // navigator('/dashboard');
-  //   }
-  // });
+  // const google = async () => {
+  //   const data = await signInWithGoogle();
+  //   console.log(data.token, data.user);
+
+  // };
 
   return (
     <div
@@ -134,6 +137,18 @@ const Login: React.FC = () => {
           </Button>
           Or <Link to="/register">register now!</Link>
         </Form.Item>
+
+        {/* <button onClick={google}
+          style={{
+            background: "#ff7a45",
+            width: "100%",
+            height: "34px",
+            borderRadius: "6px",
+            color: "white",
+          }}>
+          <FcGoogle size="22" style={{ marginRight: "8px" }} />
+          Sign In With Goolge
+        </button> */}
       </Form>
     </div>
   );

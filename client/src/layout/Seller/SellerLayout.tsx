@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   DesktopOutlined,
   SettingOutlined,
@@ -15,6 +15,7 @@ import Headercomp from "../../components/Headercomp/Headercomp";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { removeLocalUserInfo } from "../../utils/helpers/setUserLocalInfo";
+import { LogoutProvider } from "../../App";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -88,6 +89,8 @@ const SellerLayout: React.FC<Props> = (props) => {
     token: { colorBgContainer },
   } = theme.useToken();
 
+  const { haveToken, logoutFunc } = useContext(LogoutProvider);
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -116,12 +119,8 @@ const SellerLayout: React.FC<Props> = (props) => {
             theme="dark"
             onClick={(item) => {
               console.log(item);
-              if (item.key === "/logout") {
-                removeLocalUserInfo();
-                navigate("/login");
-              } else {
-                navigate(item.key);
-              }
+              if (item.key === "/logout") logoutFunc()
+              else navigate(item.key)
             }}
             mode="inline"
             items={siderBottomItem}

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   DesktopOutlined,
   SettingOutlined,
@@ -16,6 +16,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { removeLocalUserInfo } from "../../utils/helpers/setUserLocalInfo";
+import { LogoutProvider } from "../../App";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -77,6 +78,7 @@ interface Props {
 
 const AdminLayout: React.FC<Props> = (props) => {
   const [collapsed, setCollapsed] = useState(false);
+  const { haveToken, logoutFunc } = useContext(LogoutProvider);
 
   const location = useLocation();
   const [selectedKeys, setSelectedKeys] = useState("/");
@@ -119,12 +121,8 @@ const AdminLayout: React.FC<Props> = (props) => {
           <Menu
             theme="dark"
             onClick={(item) => {
-              if (item.key === "/logout") {
-                removeLocalUserInfo();
-                navigate("/login");
-              } else {
-                navigate(item.key);
-              }
+              if (item.key === "/logout") logoutFunc();
+              else navigate(item.key)
             }}
             mode="inline"
             items={siderBottomItem}

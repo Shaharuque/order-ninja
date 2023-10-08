@@ -1,16 +1,16 @@
 import CustomInstance from "../../lib/axios";
 
 export const getAllCategory = async () => {
-    try{
+    try {
         const result = await CustomInstance.get(`/category`);
         return result.data;
 
-    }catch(error){
+    } catch (error) {
         console.log(error);
     }
 }
 
-export async function getAllSearchedProducts(query:any,category:any){
+export async function getAllSearchedProducts(query: any, category: any) {
 
     try {
         const result = await CustomInstance.get(`/public/search?q=${query}&cat=${category}`);
@@ -23,7 +23,7 @@ export async function getAllSearchedProducts(query:any,category:any){
     }
 }
 
-export async function getAllSearchedProductsSuccessCheck(query:any,category:any){
+export async function getAllSearchedProductsSuccessCheck(query: any, category: any) {
 
     try {
         const result = await CustomInstance.get(`/public/search?q=${query}&cat=${category}`);

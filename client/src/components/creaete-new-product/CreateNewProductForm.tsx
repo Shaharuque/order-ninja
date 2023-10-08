@@ -250,12 +250,12 @@ function CreateNewProductForm({ updater, setOpen }) {
                 </Col>
             </Row>
 
-            <div style={{display:'flex',flexDirection:'column', marginBottom:'10px'}}>
+            <div style={{ display: 'flex', flexDirection: 'column', marginBottom: '10px' }}>
                 <label>
                     Description
                 </label>
                 <textarea
-                    style={{ width: '100%',border:'1px solid gray', borderRadius:'5px' }}
+                    style={{ width: '100%', border: '1px solid gray', borderRadius: '5px' }}
                     onChange={(e) => setDesc(e.target.value)}
                     defaultValue={isDescUpdated ? desc : undefined}
                     rows={8}
@@ -263,7 +263,7 @@ function CreateNewProductForm({ updater, setOpen }) {
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-                <button type="button" onClick={handleDescGenerate} style={{ padding: '5px', borderRadius: '5px' }}>Generate</button>
+                <button id="generate" type="button" onClick={handleDescGenerate} style={{ padding: '5px', borderRadius: '5px' }}>Generate</button>
                 {
                     loading && <span style={{ marginLeft: '10px' }}>Loading...</span>
                 }

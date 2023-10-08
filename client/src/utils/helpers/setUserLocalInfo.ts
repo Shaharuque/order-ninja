@@ -29,7 +29,6 @@ export function getLocalUserInfo(): IUserLocalInfo {
         cart: JSON.parse(localStorage.getItem('cart')!),
         loggedIn: JSON.parse(localStorage.getItem("loggedIn")!),
         raw_user: JSON.parse(localStorage.getItem('raw_user')!)
-
     });
 }
 

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { useShoppingCart } from "../../context/ShoppingCartContext";
 import { Form, Select, Button, Row, Col, Input, message, DatePicker } from "antd";
@@ -27,7 +28,7 @@ function OrderShippingAddress({ handleShipping, next }) {
 
     useEffect(() => {
         if (userData) {
-            const getZoneList = getPathaoZone( Number(userData?.city)).then((res) => {
+            const getZoneList = getPathaoZone(Number(userData?.city)).then((res) => {
                 console.log('Zone List', res)
                 setZoneList(
                     res.map((v) => ({ value: v.zone_id, label: v.zone_name }))
@@ -42,7 +43,7 @@ function OrderShippingAddress({ handleShipping, next }) {
             });
 
         }
-    }, [ (userData?.city)])
+    }, [(userData?.city)])
 
     console.log('first zone list render', zoneList)
 
@@ -118,7 +119,7 @@ function OrderShippingAddress({ handleShipping, next }) {
                     city: 32,
                     zone: 546,
                     area: 7631,
-                    phone:'01799856586',
+                    phone: '01799856586',
                 }}
             >
                 <Row>

@@ -1,6 +1,7 @@
 // src/__ tests __/App.test.tsx
 import '@testing-library/jest-dom'
 import { getAllCategory, getAllSearchedProducts, getAllSearchedProductsSuccessCheck } from "../services/Business/businessServices";
+import { handleErrorMessage } from '../services/pureFunction';
 
 const expectedValue = [
     {
@@ -67,6 +68,7 @@ const expectedValue = [
         "__v": 0
     }
 ]
+
 const searchedProductData = [
     {
         "_id": "64f872ee54d66f80bebfbdbe",
@@ -92,37 +94,35 @@ const searchedProductData = [
     }
 ]
 
-const taggedData =
-    [
-        {
-            "_id": "64f872ee54d66f80bebfbdbe",
-            "id": "3a7d63ba-a583-4c4a-a3bd-f5158bdb19c0",
-            "store_id": "fe2a6dfd-1a36-4f75-80f6-96a7bac875be",
-            "name": "egg",
-            "category": [
-                "a87ee15d-bf96-44ff-977e-427171165f64"
-            ],
-            "price": 700,
-            "stock": 5,
-            "sold": 0,
-            "description": "Best egg",
-            "images": [
-                "http://res.cloudinary.com/dro9twjqg/image/upload/v1694003949/skh2otyhq1a2my2xk5cc.jpg"
-            ],
-            "reviews": [],
-            "unit_size": 50,
-            "weight": 2,
-            "createdAt": "2023-09-06T12:39:10.288Z",
-            "updatedAt": "2023-09-06T12:39:10.288Z",
-            "__v": 0
-        }
-    ]
+const taggedData = [
+    {
+        "_id": "64f872ee54d66f80bebfbdbe",
+        "id": "3a7d63ba-a583-4c4a-a3bd-f5158bdb19c0",
+        "store_id": "fe2a6dfd-1a36-4f75-80f6-96a7bac875be",
+        "name": "egg",
+        "category": [
+            "a87ee15d-bf96-44ff-977e-427171165f64"
+        ],
+        "price": 700,
+        "stock": 5,
+        "sold": 0,
+        "description": "Best egg",
+        "images": [
+            "http://res.cloudinary.com/dro9twjqg/image/upload/v1694003949/skh2otyhq1a2my2xk5cc.jpg"
+        ],
+        "reviews": [],
+        "unit_size": 50,
+        "weight": 2,
+        "createdAt": "2023-09-06T12:39:10.288Z",
+        "updatedAt": "2023-09-06T12:39:10.288Z",
+        "__v": 0
+    }
+]
 
 
 test('demo', () => {
     expect(true).toBe(true)
-})
-
+});
 
 // describe('fetchData', () => {
 //     it('fetches data successfully from an API', async () => {
@@ -141,33 +141,82 @@ test('fetching product categories test', async () => {
 });
 
 test('fetching searched data api test', async () => {
-    let query = 'egg'
-    let category = ''
+    const query = 'egg'
+    const category = ''
     return await getAllSearchedProducts(query, category).then(data => {
         expect(data).toStrictEqual(searchedProductData);
     });
 });
 
 test('fetching tagged category product get test', async () => {
-    let query = ''
-    let category = 'a87ee15d-bf96-44ff-977e-427171165f64'
+    const query = ''
+    const category = 'a87ee15d-bf96-44ff-977e-427171165f64'
     return await getAllSearchedProducts(query, category).then(data => {
         expect(data).toStrictEqual(taggedData);
     });
 });
 
 test('fetching tagged category success test', async () => {
-    let query = ''
-    let category = 'a87ee15d-bf96-44ff-977e-427171165f64'
+    const query = ''
+    const category = 'a87ee15d-bf96-44ff-977e-427171165f64'
     return await getAllSearchedProductsSuccessCheck(query, category).then(data => {
         expect(data?.status).toStrictEqual(true);
     });
 });
 
 test('fetching individual product data', async () => {
-    let query = ''
-    let category = 'a87ee15d-bf96-44ff-977e-427171165f64'
+    const query = ''
+    const category = 'a87ee15d-bf96-44ff-977e-427171165f64'
     return await getAllSearchedProducts(query, category).then(data => {
         expect(data).toStrictEqual(taggedData);
     });
 });
+
+describe('It should de give error message', () => {
+    // Define your test data as an array of test cases
+    const testCases = [
+        {
+            input: {
+                response: {
+                    data: {
+                        error: "error data",
+                    },
+                },
+            }, expected: "error data"
+        },
+        {
+            input: {
+                response: {
+                    data: {
+                        data: "error data",
+                    },
+                },
+            }, expected: "error data"
+        }
+    ];
+
+    // Use test.each to run the test function for each test case
+    test.each(testCases)('Test case: %p ', async (testCase) => {
+        const res2 = await handleErrorMessage(testCase.input);
+        expect(res2).toStrictEqual(testCase.expected);
+    });
+    // test.each(testCases)('Test case: input %i should equal %i', async (testCase) => {
+    //     const res2 = await handleErrorMessage(testCase.input);
+    //     expect(res2).toStrictEqual(testCase.expected);
+    // });
+});
+
+
+// describe('My Test Suite', () => {
+//     // Define your test data as an array of test cases
+//     const testCases = [
+//         { input: 1, expected: 2 },
+//         { input: 3, expected: 6 },
+//         { input: 5, expected: 10 },
+//     ];
+
+//     // Use test.each to run the test function for each test case
+//     test.each(testCases)('Test case: input %i should equal %i', ({ input, expected }) => {
+//         expect(input * 2).toBe(expected);
+//     });
+// });

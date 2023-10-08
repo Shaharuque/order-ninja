@@ -1,9 +1,3 @@
-// describe('login test', () => {
-//   it('passes', () => {
-//     cy.visit('https://rapidapi.com/rphrp1985/api/open-ai21/pricing')
-//   })
-// })
-
 describe('Login Form Submission', () => {
   // individual test
   it('should submit the login form with valid credentials', () => {
@@ -16,7 +10,7 @@ describe('Login Form Submission', () => {
     // login function call end
     // cy.url().should('eq', 'http://localhost:5173/dashboard'); // Assuming successful login redirects to '/dashboard'
 
-    cy.wait(5000);
+    cy.wait(3000);
 
     // Order page start
     cy.get('.ant-menu-item').contains('Order').click();
@@ -34,18 +28,23 @@ describe('Login Form Submission', () => {
     cy.get('.ant-select-selector').click();
     // cy.get('.ant-select-dropdown-menu-item').contains('Sauces & Pickles').click();
     cy.get('.ant-select-item-option-content').contains('Sauces & Pickles').click();
+    cy.get('#generate').contains('Generate').click();
+    cy.wait(5000);
 
-    cy.get('#form_item_path_description').type('this is Banana');
+    // cy.get('#form_item_path_description').type('this is Banana');
     cy.get('#form_item_path_unit_size').type('500');
     cy.get('#form_item_path_price').type('1500');
     cy.get('#form_item_path_weight').type(1500);
     cy.get('#form_item_path_stock').type('30');
-    cy.get('span').contains('Select File').selectFile('C:/Users/Student 4/Downloads/mulyadi-ITrK8OmHCdo-unsplash.jpg', { action: 'drag-drop' });
+    cy.get('input[placeholder="Select date"]').click();
+    cy.get('.ant-picker-cell-inner').contains("22").click();
+    cy.get('span').contains('Select File').selectFile('C:\/Users\/tkrch\/OneDrive\/Desktop\/fruites_img\/charlesdeluvio-0v_1TPz1uXw-unsplash.jpg', { action: 'drag-drop' });
     // end fillUp form.
+
 
     //submit product create form
     cy.get('span').contains('Submit').click();
-
+    cy.wait(5000);
     // Order page start
     cy.get('.ant-menu-item').contains('Sales Report').click();
     cy.wait(3000);
@@ -53,6 +52,8 @@ describe('Login Form Submission', () => {
 
     cy.url().should('eq', 'http://localhost:5173/report'); // Assuming successful login redirects to '/dashboard'
     // product page end
+
+    cy.get('.ant-menu-title-content').contains('Logout').click();
   });
 })
 
